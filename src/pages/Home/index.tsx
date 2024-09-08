@@ -14,12 +14,12 @@ import {
   FormControl,
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-
+import { Map as LeafletMap } from 'leaflet';
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 
 const Home = () => {
-  const mapContainerRef = useRef(null);
+  const mapContainerRef = useRef<LeafletMap | null>(null);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(true);
   const [inputText, setInputText] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,15 +30,9 @@ const Home = () => {
     const rasterService = await RasterService.getGeoFile(inputText, 100);
 
     if (rasterService) {
-      handleSetMap(rasterService);
-    }
-  };
-
-  const handleSetMap = async (rasterService) => {
-    if (rasterService) {
       const bounds = await rasterService.getBounds();
 
-      mapContainerRef?.current?.fitBounds(bounds);
+      mapContainerRef.current?.fitBounds(bounds);
 
       if (rasterService.addTo && typeof rasterService.addTo === 'function') {
         rasterService.addTo(mapContainerRef.current);
