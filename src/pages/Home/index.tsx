@@ -1,5 +1,5 @@
-import { ModalFormTiff, MapControls } from '../../components';
-import MapProvider from '../../context/MapContext';
+import { ModalFormTiff, MapControls } from '@components/index';
+import MapProvider from '@context/MapContext';
 
 const Home = () => {
   return (

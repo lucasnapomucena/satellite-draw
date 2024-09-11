@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import { GeoTIFF } from 'ol/source';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
-import { useMap } from '../../../hooks';
+import { useMap } from '@hooks/index';
 
 export const ModalFormTiff = () => {
   const map = useMap();
