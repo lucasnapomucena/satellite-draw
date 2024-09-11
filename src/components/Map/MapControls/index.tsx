@@ -3,14 +3,16 @@ import styled from '@emotion/styled';
 import Draw from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-
 import Select from 'ol/interaction/Select.js';
-import { useState } from 'react';
-import { PiArrowCounterClockwise, PiPolygonLight } from 'react-icons/pi';
+import { useEffect, useState } from 'react';
+import {
+  PiArrowCounterClockwise,
+  PiPolygonLight,
+  PiRectangle,
+} from 'react-icons/pi';
 import Modify from 'ol/interaction/Modify.js';
 
 import { useMap } from '@/hooks/index';
-import { Type } from 'ol/geom/Geometry';
 import { pointerMove } from 'ol/events/condition';
 
 const MapControlsContainer = styled.div`
@@ -26,10 +28,14 @@ const MapControlsContainer = styled.div`
 export const MapControls = () => {
   const map = useMap();
 
-  const [isDraw, setIsDraw] = useState<boolean>(false);
+  const [isDrawingPolygon, setIsDrawingPolygon] = useState<boolean>(false);
   const vectorSource = new VectorSource();
 
   const vectorLayer = new VectorLayer({
+    source: vectorSource,
+  });
+
+  const modify = new Modify({
     source: vectorSource,
   });
 
@@ -37,21 +43,18 @@ export const MapControls = () => {
     condition: pointerMove,
   });
 
-  const handleDrawClick = (type: Type) => {
-    if (!isDraw) {
-      const draw = new Draw({
-        source: vectorSource,
-        type: type,
-      });
+  const polygonDraw = new Draw({
+    source: vectorSource,
+    type: 'Polygon',
+  });
 
-      const modify = new Modify({
-        source: vectorSource,
-      });
+  const handleDrawClick = () => {
+    if (!isDrawingPolygon) {
       map?.addInteraction(selectPointerMove);
-      map?.addInteraction(draw);
+      map?.addInteraction(polygonDraw);
       map?.addInteraction(modify);
       map?.addLayer(vectorLayer);
-      setIsDraw(true);
+      setIsDrawingPolygon(true);
 
       return;
     }
@@ -59,7 +62,7 @@ export const MapControls = () => {
     map?.getInteractions().forEach((interaction) => {
       if (interaction instanceof Draw) {
         map.removeInteraction(interaction);
-        setIsDraw(false);
+        setIsDrawingPolygon(false);
       }
     });
   };
@@ -77,13 +80,30 @@ export const MapControls = () => {
     });
   };
 
+  useEffect(() => {
+    return () => {
+      map?.removeInteraction(modify);
+      map?.removeInteraction(polygonDraw);
+      map?.removeInteraction(selectPointerMove);
+      map?.removeLayer(vectorLayer);
+    };
+  }, []);
+
   return (
     <MapControlsContainer>
-      <Button onClick={() => handleDrawClick('Polygon')}>
+      <Button
+        colorScheme={isDrawingPolygon ? 'teal' : 'gray'}
+        onClick={() => handleDrawClick()}
+        variant="solid"
+      >
         <PiPolygonLight size={24} />
       </Button>
 
-      <Button onClick={() => handleUndoClick()}>
+      <Button colorScheme="gray" variant="solid">
+        <PiRectangle size={24} />
+      </Button>
+
+      <Button variant="solid" onClick={() => handleUndoClick()}>
         <PiArrowCounterClockwise size={24} />
       </Button>
     </MapControlsContainer>
