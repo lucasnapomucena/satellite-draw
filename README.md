@@ -1,5 +1,7 @@
 # Satellite Draw
 
+![Satellite Draw](./src/assets/images/example.png)
+
 Satellite Draw is a project designed to facilitate the visualization and manipulation of satellite images. Using modern technologies, the project offers an intuitive interface for users to interact with geospatial data.
 
 ## Technologies Used
@@ -8,6 +10,7 @@ Satellite Draw is a project designed to facilitate the visualization and manipul
 - **TypeScript**: A superset of JavaScript that adds static typing to the language.
 - **Vite**: A fast and modern build tool for front-end projects.
 - **Chakra UI**: Chakra UI is a simple, modular and accessible component library.
+- **OpenLayers**: A high-performance, feature-packed library for all your mapping needs.
 
 ## Features
 
