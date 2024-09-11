@@ -34,7 +34,6 @@ export const ModalFormTiff = () => {
     const layer = new WebGLTileLayer({
       source: source,
     });
-    map?.removeLayer(map.getLayers().getArray()[0]);
     map?.addLayer(layer);
     map?.setView(source.getView());
   };
