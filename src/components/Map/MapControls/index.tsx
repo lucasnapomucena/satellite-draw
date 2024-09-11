@@ -8,7 +8,7 @@ import { Circle, Fill, Stroke, Style } from 'ol/style';
 import { useState } from 'react';
 import { PiFloppyDisk, PiPolygonLight } from 'react-icons/pi';
 
-import { useMap } from '@hooks/index';
+import { useMap } from '@/hooks/index';
 import { Type } from 'ol/geom/Geometry';
 import RenderFeature from 'ol/render/Feature';
 
