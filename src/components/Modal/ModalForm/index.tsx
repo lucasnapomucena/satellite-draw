@@ -14,9 +14,9 @@ import {
 import { useState } from 'react';
 import { GeoTIFF } from 'ol/source';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
-import { useMap } from './../../../hooks';
+import { useMap } from '../../../hooks';
 
-export const ModalLoadTiff = () => {
+export const ModalFormTiff = () => {
   const map = useMap();
   const [inputText, setInputText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -82,4 +82,4 @@ export const ModalLoadTiff = () => {
   );
 };
 
-export default ModalLoadTiff;
+export default ModalFormTiff;

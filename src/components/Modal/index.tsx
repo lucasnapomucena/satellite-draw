@@ -1,1 +1,1 @@
-export * from './ModalLoadTiff';
+export * from './ModalForm';

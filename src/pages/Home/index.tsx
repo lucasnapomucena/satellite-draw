@@ -1,4 +1,4 @@
-import { ModalLoadTiff, MapControls } from '../../components';
+import { ModalFormTiff, MapControls } from '../../components';
 import MapProvider from '../../context/MapContext';
 
 const Home = () => {
@@ -6,7 +6,7 @@ const Home = () => {
     <>
       <MapProvider>
         <MapControls />
-        <ModalLoadTiff />
+        <ModalFormTiff />
       </MapProvider>
     </>
   );
