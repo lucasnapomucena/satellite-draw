@@ -1,11 +1,13 @@
-import { ModalLoadTiff, MapControls, MapContainer } from '../../components';
+import { ModalLoadTiff, MapControls } from '../../components';
+import MapProvider from '../../context/MapContext';
 
 const Home = () => {
   return (
     <>
-      <MapContainer />
-      <MapControls />
-      <ModalLoadTiff />
+      <MapProvider>
+        <MapControls />
+        <ModalLoadTiff />
+      </MapProvider>
     </>
   );
 };

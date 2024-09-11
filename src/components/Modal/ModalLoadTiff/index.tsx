@@ -14,17 +14,17 @@ import {
 import { useState } from 'react';
 import { GeoTIFF } from 'ol/source';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
-import useMapStore from '../../../store/map';
+import { useMap } from './../../../hooks';
 
 export const ModalLoadTiff = () => {
-  const map = useMapStore((state) => state.map);
+  const map = useMap();
   const [inputText, setInputText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmitForm = async (value: string) => {
-    const source = await handleGetGeoTiffUrl(value);
     setIsLoading(true);
+    const source = await handleGetGeoTiffUrl(value);
     handleSetGeoTiff(source);
     setIsLoading(false);
     setIsOpen(false);
@@ -34,23 +34,16 @@ export const ModalLoadTiff = () => {
     const layer = new WebGLTileLayer({
       source: source,
     });
-
+    map?.removeLayer(map.getLayers().getArray()[0]);
     map?.addLayer(layer);
     map?.setView(source.getView());
   };
 
-  const handleGetGeoTiffUrl = async (inputText: string): Promise<GeoTIFF> => {
-    const source = new GeoTIFF({
-      sources: [
-        {
-          url: inputText,
-        },
-      ],
+  const handleGetGeoTiffUrl = async (url: string): Promise<GeoTIFF> => {
+    return new GeoTIFF({
+      sources: [{ url: url }],
       wrapX: true,
-      convertToRGB: true,
     });
-
-    return source;
   };
 
   return (
