@@ -12,9 +12,15 @@ import {
   FormControl,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { GeoTIFF } from 'ol/source';
+import { GeoTIFF, OSM } from 'ol/source';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import { useMap } from '@/hooks/index';
+import proj4 from 'proj4';
+import { fromEPSGCode, register } from 'ol/proj/proj4.js';
+import TileLayer from 'ol/layer/Tile';
+import { Projection } from 'ol/proj';
+
+register(proj4);
 
 export const ModalFormTiff = () => {
   const map = useMap();
@@ -31,11 +37,26 @@ export const ModalFormTiff = () => {
   };
 
   const handleSetGeoTiff = (source: GeoTIFF) => {
+    const basemap = new TileLayer({
+      source: new OSM(),
+    });
+
     const layer = new WebGLTileLayer({
       source: source,
     });
+    map?.getLayers().clear();
+    map?.addLayer(basemap);
+
     map?.addLayer(layer);
-    map?.setView(source.getView());
+    map?.setView(
+      source
+        .getView()
+        .then((config) =>
+          fromEPSGCode((config?.projection as Projection)?.getCode()).then(
+            () => config,
+          ),
+        ),
+    );
   };
 
   const handleGetGeoTiffUrl = async (url: string): Promise<GeoTIFF> => {
