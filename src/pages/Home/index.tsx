@@ -3,12 +3,10 @@ import { MapProvider } from '@/context/index';
 
 const Home = () => {
   return (
-    <>
-      <MapProvider>
-        <MapControls />
-        <ModalFormTiff />
-      </MapProvider>
-    </>
+    <MapProvider>
+      <MapControls />
+      <ModalFormTiff />
+    </MapProvider>
   );
 };
 
