@@ -2,6 +2,7 @@
     "semi": true,
     "singleQuote": true,
     "trailingComma": "all",
-    "printWidth": 80,
+    "printWidth": 120,
+    "arrayElementNewline": "consistent",
     "tabWidth": 2
   }

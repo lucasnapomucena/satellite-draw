@@ -21,7 +21,7 @@ import { Projection } from 'ol/proj';
 
 register(proj4);
 
-export const ModalFormTiff = () => {
+export const ModalForm = () => {
   const map = useMap();
   const [inputText, setInputText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -42,11 +42,7 @@ export const ModalFormTiff = () => {
 
     const projection = source
       .getView()
-      .then((config) =>
-        fromEPSGCode((config?.projection as Projection)?.getCode()).then(
-          () => config,
-        ),
-      );
+      .then((config) => fromEPSGCode((config?.projection as Projection)?.getCode()).then(() => config));
 
     map?.setView(projection);
     map?.addLayer(layer);
@@ -95,4 +91,4 @@ export const ModalFormTiff = () => {
   );
 };
 
-export default ModalFormTiff;
+export default ModalForm;

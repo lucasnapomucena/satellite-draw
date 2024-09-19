@@ -1,11 +1,11 @@
-import { ModalFormTiff, MapControls } from '@/components/index';
+import { ModalForm, MapControls } from '@/modules/home/index';
 import { MapProvider } from '@/context/index';
 
 const Home = () => {
   return (
     <MapProvider>
       <MapControls />
-      <ModalFormTiff />
+      <ModalForm />
     </MapProvider>
   );
 };
