@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
-import { PiArrowCounterClockwise, PiPolygonLight, PiRectangle } from 'react-icons/pi';
+import { PiArrowCounterClockwise, PiPolygonLight, PiCursor, PiRectangle } from 'react-icons/pi';
 import { useMap } from '@/hooks/index';
 import { MapControlsContainer } from './style';
 import { useInteractions } from './useInteractions';
@@ -10,11 +10,12 @@ import VectorLayer from 'ol/layer/Vector';
 
 export const MapControls = () => {
   const map = useMap();
-  const [activeControl, setActiveControl] = useState<string | null>(null);
+  const [activeControl, setActiveControl] = useState<string | null>('select');
   const { vectorSource, vectorLayer } = useVectorLayer();
   const { modify, selectPointerMove, polygon, rectangle } = useInteractions(vectorSource);
 
   const controls = [
+    { name: 'select', icon: <PiCursor size={24} />, handler: () => handleSelectClick() },
     { name: 'polygon', icon: <PiPolygonLight size={24} />, handler: () => handlePolygonClick() },
     { name: 'rectangle', icon: <PiRectangle size={24} />, handler: () => handleRectangleClick() },
     { name: 'undo', icon: <PiArrowCounterClockwise size={24} />, handler: () => handleUndoClick() },
@@ -31,15 +32,24 @@ export const MapControls = () => {
     }
   };
 
+  const deactivateAllInteractions = useCallback(() => {
+    polygon.setActive(false);
+    rectangle.setActive(false);
+    selectPointerMove.setActive(false);
+  }, [polygon, rectangle, selectPointerMove]);
+
+  const handleSelectClick = useCallback(() => {
+    selectPointerMove.setActive(true);
+  }, [selectPointerMove]);
+
   const handlePolygonClick = useCallback(() => {
     polygon.setActive(true);
-    rectangle.setActive(false);
+
     handleAddLayer();
   }, [polygon]);
 
   const handleRectangleClick = useCallback(() => {
     rectangle.setActive(true);
-    polygon.setActive(false);
     handleAddLayer();
   }, [rectangle]);
 
@@ -54,6 +64,7 @@ export const MapControls = () => {
     (name: string) => {
       if (!map) return;
       setActiveControl(name);
+      deactivateAllInteractions();
 
       const [control] = controls.filter((control) => control.name == name);
 
@@ -67,14 +78,14 @@ export const MapControls = () => {
       map.addInteraction(selectPointerMove);
       map.addInteraction(modify);
 
-      setTimeout(() => {
-        map.addInteraction(polygon);
-        map.addInteraction(rectangle);
-        polygon.setActive(false);
-        rectangle.setActive(false);
-      }, 1000);
+      map.addInteraction(selectPointerMove);
+      map.addInteraction(polygon);
+      map.addInteraction(rectangle);
+      selectPointerMove.setActive(true);
+      polygon.setActive(false);
+      rectangle.setActive(false);
     }
-  }, [map, selectPointerMove, modify, vectorLayer]);
+  }, [map, selectPointerMove, selectPointerMove, modify, vectorLayer]);
 
   return (
     <MapControlsContainer>
