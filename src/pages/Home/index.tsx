@@ -1,12 +1,12 @@
 import { ModalForm, MapControls } from '@/modules/home/index';
-import { MapProvider } from '@/context/index';
+import MapComponent from '@/components/Map';
 
 const Home = () => {
   return (
-    <MapProvider>
+    <MapComponent>
       <MapControls />
       <ModalForm />
-    </MapProvider>
+    </MapComponent>
   );
 };
 

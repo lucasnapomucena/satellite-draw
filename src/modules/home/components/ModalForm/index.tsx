@@ -14,15 +14,15 @@ import {
 import { useState } from 'react';
 import { GeoTIFF } from 'ol/source';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
-import { useMap } from '@/hooks/index';
 import proj4 from 'proj4';
 import { fromEPSGCode, register } from 'ol/proj/proj4.js';
 import { Projection } from 'ol/proj';
+import { useMapStore } from '@/store/useMapStore';
 
 register(proj4);
 
 export const ModalForm = () => {
-  const map = useMap();
+  const map = useMapStore((state) => state.mapInstance);
   const [inputText, setInputText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);

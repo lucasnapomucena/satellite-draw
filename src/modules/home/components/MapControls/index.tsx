@@ -2,14 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
 import { PiArrowCounterClockwise, PiPolygonLight, PiCursor, PiRectangle } from 'react-icons/pi';
-import { useMap } from '@/hooks/index';
+
 import { MapControlsContainer } from './style';
 import { useInteractions } from './useInteractions';
 import { useVectorLayer } from './useVectorLayer';
 import VectorLayer from 'ol/layer/Vector';
+import { useMapStore } from '@/store/useMapStore';
 
 export const MapControls = () => {
-  const map = useMap();
+  const map = useMapStore((state) => state.mapInstance);
   const [activeControl, setActiveControl] = useState<string | null>('select');
   const { vectorSource, vectorLayer } = useVectorLayer();
   const { modify, selectPointerMove, polygon, rectangle } = useInteractions(vectorSource);
@@ -21,7 +22,7 @@ export const MapControls = () => {
     { name: 'undo', icon: <PiArrowCounterClockwise size={24} />, handler: () => handleUndoClick() },
   ];
 
-  const handleAddLayer = () => {
+  const handleAddLayer = useCallback(() => {
     const isVectorLayer = map
       ?.getLayers()
       .getArray()
@@ -30,7 +31,7 @@ export const MapControls = () => {
     if (!isVectorLayer) {
       map?.addLayer(vectorLayer);
     }
-  };
+  }, [map, vectorLayer]);
 
   const deactivateAllInteractions = useCallback(() => {
     polygon.setActive(false);
@@ -46,12 +47,12 @@ export const MapControls = () => {
     polygon.setActive(true);
 
     handleAddLayer();
-  }, [polygon]);
+  }, [polygon, handleAddLayer]);
 
   const handleRectangleClick = useCallback(() => {
     rectangle.setActive(true);
     handleAddLayer();
-  }, [rectangle]);
+  }, [rectangle, handleAddLayer]);
 
   const handleUndoClick = useCallback(() => {
     const features = vectorSource.getFeatures();
@@ -70,21 +71,21 @@ export const MapControls = () => {
 
       control.handler();
     },
-    [map],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [map, deactivateAllInteractions],
   );
 
   useEffect(() => {
     if (map) {
       map.addInteraction(selectPointerMove);
       map.addInteraction(modify);
-
-      map.addInteraction(selectPointerMove);
       map.addInteraction(polygon);
       map.addInteraction(rectangle);
       selectPointerMove.setActive(true);
       polygon.setActive(false);
       rectangle.setActive(false);
     }
+
   }, [map, selectPointerMove, selectPointerMove, modify, vectorLayer]);
 
   return (
