@@ -72,7 +72,7 @@ export const MapControls = () => {
       control.handler();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [map, deactivateAllInteractions],
+    [map],
   );
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export const MapControls = () => {
       rectangle.setActive(false);
     }
 
-  }, [map, selectPointerMove, selectPointerMove, modify, vectorLayer]);
+  }, [map, selectPointerMove, modify, vectorLayer, polygon, rectangle]);
 
   return (
     <MapControlsContainer>
