@@ -1,7 +1,5 @@
 # Satellite Draw
 
-![Satellite Draw](./src/assets/images/example.png)
-
 Satellite Draw is a project designed to facilitate the visualization and manipulation of satellite images. Using modern technologies, the project offers an intuitive interface for users to interact with geospatial data.
 
 ## Technologies Used
