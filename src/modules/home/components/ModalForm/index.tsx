@@ -21,10 +21,14 @@ import { useMapStore } from '@/store/useMapStore';
 
 register(proj4);
 
-export const ModalForm = () => {
+interface ModalFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const ModalForm = ({ isOpen = false, onClose }: ModalFormProps) => {
   const map = useMapStore((state) => state.mapInstance);
   const [inputText, setInputText] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmitForm = async (value: string) => {
@@ -32,7 +36,7 @@ export const ModalForm = () => {
     const source = await handleGetGeoTiffUrl(value);
     handleSetGeoTiff(source);
     setIsLoading(false);
-    setIsOpen(false);
+    onClose();
   };
 
   const handleSetGeoTiff = (source: GeoTIFF) => {
@@ -45,7 +49,7 @@ export const ModalForm = () => {
       .then((config) => fromEPSGCode((config?.projection as Projection)?.getCode()).then(() => config));
 
     map?.setView(projection);
-    map?.addLayer(layer);
+    map?.getLayers().insertAt(1, layer);
   };
 
   const handleGetGeoTiffUrl = async (url: string): Promise<GeoTIFF> => {
@@ -56,10 +60,10 @@ export const ModalForm = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Load your TIF</ModalHeader>
+        <ModalHeader>Load your .tiff image</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
