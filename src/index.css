@@ -10,11 +10,3 @@ div#root {
   display: flex;
   overflow: hidden;
 }
-
-div#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
-  width: 100%;
-}
