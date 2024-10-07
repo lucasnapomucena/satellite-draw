@@ -4,19 +4,20 @@ import { View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import { OSM } from 'ol/source';
 import { useEffect } from 'react';
+import { MapContainer } from './style';
 
 interface MapProviderProps {
   children: React.ReactNode;
 }
 
-const MapComponent = ({ children }: MapProviderProps) => {
+export const MapComponent = ({ children }: MapProviderProps) => {
   const { mapInstance, setMapInstance } = useMapStore((state) => state);
-  
+
   useEffect(() => {
     if (!mapInstance) {
       const basemap = new TileLayer({
         source: new OSM(),
-      })
+      });
 
       const map = new Map({
         target: 'map',
@@ -31,7 +32,7 @@ const MapComponent = ({ children }: MapProviderProps) => {
     }
   }, [mapInstance, setMapInstance]);
 
-  return <div id="map">{children}</div>;
+  return <MapContainer id="map">{children}</MapContainer>;
 };
 
 export default MapComponent;
